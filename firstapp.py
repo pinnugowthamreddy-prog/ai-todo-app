@@ -48,27 +48,39 @@ st.divider()
 # -----------------------------------------
 st.subheader("Your Tasks")
 
-response = requests.get(API_URL)
-
-# IMMEDIATELY check the status code before doing anything else!
-if response.status_code == 200:
-    tasks = response.json()
+try:
+    response = requests.get(API_URL)
     
-    if len(tasks) > 0:
-        # Only create the DataFrame safely inside here
-        df = pd.DataFrame(tasks)
+    # 1. Check if the connection was successful
+    if response.status_code == 200:
+        tasks = response.json()
         
-        # ... (Your custom analytics go here) ...
-        
-        st.divider()
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        # 2. BULLETPROOF CHECK: Ensure the data is actually a list before giving it to Pandas
+        if isinstance(tasks, list):
+            if len(tasks) > 0:
+                df = pd.DataFrame(tasks)
+                
+                # --- Your custom analytics can go here ---
+                
+                st.divider()
+                st.dataframe(df, use_container_width=True, hide_index=True)
+            else:
+                st.info("No tasks found. Add one above to see your analytics!")
+        else:
+            # If the API returns a dictionary instead of a list, catch it safely
+            st.warning("Connected, but received unexpected data format from the API.")
+            st.write(tasks)
+            
     else:
-        st.info("No tasks found. Add one above to see your analytics!")
-else:
-    st.error(f"FastAPI Error Code: {response.status_code}")
-    st.write("Raw response from server:")
-    st.write(response.text)
-        
+        # Catch 404s and 500s safely
+        st.error(f"API Connection Error: {response.status_code}")
+        st.code(f"Streamlit tried to connect to: {API_URL}")
+        st.write("Raw response from server:", response.text)
+
+except Exception as e:
+    # If the server is completely asleep or broken, catch the crash
+    st.error("Could not connect to the backend API at all.")
+    st.write(f"Error details: {e}")
 # --- NEW ANALYTICS SECTION ---
 # Calculate our key metrics
 total_tasks = len(df)
