@@ -7,7 +7,7 @@ st.title("My To-Do App")
 
 st.header("Day 3:The Full_Stack Connection")
 
-API_URL = "https://ai-todo-app-tete.onrender.com/tasks"
+API_URL = "https://ai-todo-app-tete.onrender.com/tasks" # Forced update
 
 new_task=st.text_input("Enter a new task:")
 
