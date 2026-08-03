@@ -62,45 +62,32 @@ else:
     st.error(f"API Connection Error: {response.status_code}")
     st.code(f"Streamlit tried to connect to: {API_URL}")
         
-        # --- NEW ANALYTICS SECTION ---
-        # Calculate our key metrics
-        total_tasks = len(df)
-        completed_tasks = len(df[df["status"] == "completed"])
-        pending_tasks = len(df[df["status"] == "pending"])
-        completion_rate = round((completed_tasks / total_tasks) * 100)
+# --- NEW ANALYTICS SECTION ---
+# Calculate our key metrics
+total_tasks = len(df)
+completed_tasks = len(df[df["status"] == "completed"])
+pending_tasks = len(df[df["status"] == "pending"])
+completion_rate = round((completed_tasks / total_tasks) * 100)
         
-        # Display metrics in 4 columns across the top
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Total Tasks", total_tasks)
-        m2.metric("Pending", pending_tasks)
-        m3.metric("Completed", completed_tasks)
-        m4.metric("Completion Rate", f"{completion_rate}%")
+# Display metrics in 4 columns across the top
+m1, m2, m3, m4 = st.columns(4)
+m1.metric("Total Tasks", total_tasks)
+m2.metric("Pending", pending_tasks)
+m3.metric("Completed", completed_tasks)
+m4.metric("Completion Rate", f"{completion_rate}%")
         
-        # Add a visual progress bar based on the completion rate
-        st.progress(completion_rate / 100)
-        st.divider()
+# Add a visual progress bar based on the completion rate
+st.progress(completion_rate / 100)
+st.divider()
         
-        # --- NEW CHART SECTION ---
-        st.write("### Workload Distribution")
+# --- NEW CHART SECTION ---
+st.write("### Workload Distribution")
         
-        # Count how many tasks are in each status using Pandas
-        status_counts = df["status"].value_counts()
+# Count how many tasks are in each status using Pandas
+status_counts = df["status"].value_counts()
         
-        # Display an interactive bar chart
-        st.bar_chart(status_counts, color="#ff4b4b")
-        
-        st.divider()
-        # -----------------------------
-        
-        # Display the data table below the analytics
-        st.dataframe(df, use_container_width=True, hide_index=True)
-    else:
-        st.info("No tasks found. Add one above to see your analytics!")
-else:
-    st.error(f"FastAPI Error Code: {response.status_code}")
-    st.write("Raw response from server:")
-    st.write(response.text)
-    
+# Display an interactive bar chart
+st.bar_chart(status_counts, color="#ff4b4b")
     
 st.divider()
 
