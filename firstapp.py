@@ -7,7 +7,7 @@ st.title("My To-Do App")
 
 st.header("Day 3:The Full_Stack Connection")
 
-API_URL = "https://ai-todo-app-fefe.onrender.com" # Forced update
+API_URL = "https://ai-todo-app-fefe.onrender.com/tasks" # Forced update
 
 new_task=st.text_input("Enter a new task:")
 
@@ -59,7 +59,7 @@ try:
         if isinstance(tasks, list):
             if len(tasks) > 0:
                 df = pd.DataFrame(tasks)
-                
+                total_tasks = len(df)
                 # --- Your custom analytics can go here ---
                 
                 st.divider()
