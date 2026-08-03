@@ -50,12 +50,17 @@ st.subheader("Dashboard & Current Tasks")
 
 response = requests.get(API_URL)
 
+
 if response.status_code == 200:
-    tasks = response.json() 
-    
+    tasks = response.json()
     if len(tasks) > 0:
-        # Load data into a Pandas DataFrame for analysis
         df = pd.DataFrame(tasks)
+        st.dataframe(df)
+    else:
+        st.info("No tasks yet! Add one above.")
+else:
+    st.error(f"API Connection Error: {response.status_code}")
+    st.code(f"Streamlit tried to connect to: {API_URL}")
         
         # --- NEW ANALYTICS SECTION ---
         # Calculate our key metrics
