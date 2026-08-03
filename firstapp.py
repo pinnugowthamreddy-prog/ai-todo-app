@@ -46,21 +46,28 @@ st.divider()
 # -----------------------------------------
 # PART 2: READING DATA FROM FASTAPI (GET) & ANALYTICS
 # -----------------------------------------
-st.subheader("Dashboard & Current Tasks")
+st.subheader("Your Tasks")
 
 response = requests.get(API_URL)
 
-
+# IMMEDIATELY check the status code before doing anything else!
 if response.status_code == 200:
     tasks = response.json()
+    
     if len(tasks) > 0:
+        # Only create the DataFrame safely inside here
         df = pd.DataFrame(tasks)
-        st.dataframe(df)
+        
+        # ... (Your custom analytics go here) ...
+        
+        st.divider()
+        st.dataframe(df, use_container_width=True, hide_index=True)
     else:
-        st.info("No tasks yet! Add one above.")
+        st.info("No tasks found. Add one above to see your analytics!")
 else:
-    st.error(f"API Connection Error: {response.status_code}")
-    st.code(f"Streamlit tried to connect to: {API_URL}")
+    st.error(f"FastAPI Error Code: {response.status_code}")
+    st.write("Raw response from server:")
+    st.write(response.text)
         
 # --- NEW ANALYTICS SECTION ---
 # Calculate our key metrics
